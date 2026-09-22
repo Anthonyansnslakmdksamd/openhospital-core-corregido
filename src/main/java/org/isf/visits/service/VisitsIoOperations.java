@@ -103,7 +103,7 @@ public class VisitsIoOperations {
 	 * @return the updated {@link Visit} object.
 	 * @throws OHServiceException 
 	 */
-	@Transactional
+	@Transactional(rollbackFor = OHServiceException.class)
 	public Visit updateVisit(Visit visit) throws OHServiceException {
 		return repository.save(visit);
 	}

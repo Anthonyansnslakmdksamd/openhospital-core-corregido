@@ -86,7 +86,9 @@ public class FileSystemPatientPhotoRepository {
 	public void delete(String path, int patientId) {
 		File patientIdFolder = new File(path);
 		File fdc = new File(patientIdFolder, patientId + IMAGE_FORMAT);
-		fdc.delete();
+		if (!fdc.delete() && fdc.exists()) {
+			LOGGER.warn("Could not delete photo file {}", fdc);
+		}
 	}
 
 	private Blob load(Integer patientId, String path) throws OHServiceException {
@@ -95,8 +97,7 @@ public class FileSystemPatientPhotoRepository {
 			File fdc = new File(patientIdFolder, patientId + IMAGE_FORMAT);
 			byte[] byteArray;
 			try (FileInputStream fis = new FileInputStream(fdc)) {
-				byteArray = new byte[fis.available()];
-				fis.read(byteArray);
+				byteArray = fis.readAllBytes();
 			}
 			return new SerialBlob(byteArray);
 		} catch (IOException | SQLException e) {

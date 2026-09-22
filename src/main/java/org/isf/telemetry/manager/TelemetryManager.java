@@ -22,6 +22,7 @@
 package org.isf.telemetry.manager;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -45,7 +46,7 @@ public class TelemetryManager {
 		Telemetry telemetry = retrieveOrBuildNewTelemetry();
 		telemetry.setConsentMap(consentMap);
 		telemetry.setActive(Boolean.TRUE);
-		telemetry.setOptinDate(LocalDateTime.now());
+		telemetry.setOptinDate(LocalDateTime.now(ZoneId.systemDefault()));
 		telemetry.setOptoutDate(null);
 		return telemetry;
 	}
@@ -58,7 +59,7 @@ public class TelemetryManager {
 		Telemetry telemetry = retrieveOrBuildNewTelemetry();
 		telemetry.setConsentMap(consentMap);
 		telemetry.setActive(Boolean.FALSE);
-		telemetry.setOptoutDate(LocalDateTime.now());
+		telemetry.setOptoutDate(LocalDateTime.now(ZoneId.systemDefault()));
 		return telemetry;
 	}
 
@@ -95,7 +96,7 @@ public class TelemetryManager {
 	private Telemetry updateStatusCommon(String info) {
 		Telemetry telemetry = retrieveOrBuildNewTelemetry();
 		if (!GeneralData.DEBUG) {
-			telemetry.setSentTimestamp(LocalDateTime.now());
+			telemetry.setSentTimestamp(LocalDateTime.now(ZoneId.systemDefault()));
 		}
 		telemetry.setInfo(info);
 		return this.telemetryRepository.save(telemetry);

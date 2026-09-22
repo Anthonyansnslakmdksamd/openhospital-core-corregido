@@ -23,6 +23,7 @@ package org.isf.patient.model;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
@@ -309,7 +310,7 @@ public class Patient extends SoftDeletableAuditable<String> {
 
 	public int getAge() {
 		if (this.birthDate != null) {
-			Period periodAge = Period.between(birthDate, LocalDate.now());
+			Period periodAge = Period.between(birthDate, LocalDate.now(ZoneId.systemDefault()));
 			age = periodAge.getYears();
 		}
 		return age;

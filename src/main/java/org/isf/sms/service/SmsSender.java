@@ -90,8 +90,9 @@ public class SmsSender implements Runnable {
 				LOGGER.debug("No SMS to send.");
 			}
 			try {
-				Thread.sleep(delay * 1000);
+				Thread.sleep((long) delay * 1000);
 			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
 				LOGGER.error(e.getMessage());
 			}
 		}

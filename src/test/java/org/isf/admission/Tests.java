@@ -1614,7 +1614,7 @@ class Tests extends OHCoreTestCase {
 
 		assertThat(admission.compareTo(admission2)).isZero();
 		admission2.setId(9999);
-		assertThat(admission.compareTo(admission2)).isEqualTo(admission.getId() - 9999);
+		assertThat(admission.compareTo(admission2)).isNegative();
 
 		assertThat(admission.hashCode()).isPositive();
 	}

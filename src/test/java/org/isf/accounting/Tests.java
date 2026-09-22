@@ -195,12 +195,11 @@ class Tests extends OHCoreTestCase {
 		Bill foundBill2 = accountingBillIoOperationRepository.findById(id2).orElse(null);
 		assertThat(foundBill2).isNotNull();
 
-		assertThat(bill)
-			.isNotEqualTo(TimeTools.getNow())
-			.isEqualTo(foundBill);
+		assertThat(bill.equals(TimeTools.getNow())).isFalse();
+		assertThat(bill).isEqualTo(foundBill);
 		foundBill2.setId(-1);
 		assertThat(bill).isNotEqualTo(foundBill2);
-		assertThat(bill.compareTo(foundBill2)).isEqualTo(id + 1); // id - (-1)
+		assertThat(bill.compareTo(foundBill2)).isPositive();
 		foundBill.setId(id);
 
 		assertThat(bill.hashCode()).isPositive();
@@ -487,10 +486,8 @@ class Tests extends OHCoreTestCase {
 		assertThat(payments).hasSize(1);
 
 		BillPayments billPayment = payments.get(0);
-		assertThat(foundBillPayment).isEqualTo(foundBillPayment);
-		assertThat(foundBillPayment)
-			.isNotEqualTo(TimeTools.getNow())
-			.isEqualTo(billPayment);
+		assertThat(foundBillPayment.equals(TimeTools.getNow())).isFalse();
+		assertThat(foundBillPayment).isEqualTo(billPayment);
 		int id2 = setupTestBillPayments(false);
 		BillPayments foundBillPayment2 = accountingBillPaymentIoOperationRepository.findById(id2).orElse(null);
 		assertThat(foundBillPayment2).isNotNull();
@@ -521,9 +518,8 @@ class Tests extends OHCoreTestCase {
 		assertThat(billItems).hasSize(1);
 		BillItems billItem = billItems.get(0);
 
-		assertThat(foundBillItem)
-			.isNotEqualTo(TimeTools.getNow())
-			.isEqualTo(billItem);
+		assertThat(foundBillItem.equals(TimeTools.getNow())).isFalse();
+		assertThat(foundBillItem).isEqualTo(billItem);
 		int id2 = setupTestBillItems(false);
 		BillItems foundBillItem2 = accountingBillItemsIoOperationRepository.findById(id2).orElse(null);
 		assertThat(foundBillItem2).isNotNull();

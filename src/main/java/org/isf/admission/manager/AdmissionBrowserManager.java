@@ -310,10 +310,10 @@ public class AdmissionBrowserManager {
 		if (admission.getYProg() < 0) {
 			errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.admission.pleaseinsertacorrectprogressiveid.msg")));
 		}
-		if (dateIn.isAfter(today)) {
+		if (dateIn != null && dateIn.isAfter(today)) {
 			errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.admission.futuredatenotallowed.msg")));
 		}
-		if (dateIn.isBefore(today)) {
+		if (dateIn != null && dateIn.isBefore(today)) {
 			// check for invalid date
 			for (Admission ad : admList) {
 				if (!insert && ad.getId() == admission.getId()) {

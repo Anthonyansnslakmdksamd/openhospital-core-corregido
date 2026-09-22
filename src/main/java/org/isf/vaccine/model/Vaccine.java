@@ -21,6 +21,8 @@
  */
 package org.isf.vaccine.model;
 
+import java.util.Objects;
+
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -116,6 +118,11 @@ public class Vaccine extends Auditable<String> {
 				&& (getCode().equals(((Vaccine) anObject).getCode())
 				&& getDescription().equalsIgnoreCase(((Vaccine) anObject).getDescription())
 				&& getVaccineType().equals(((Vaccine) anObject).getVaccineType()));
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getCode(), getDescription() != null ? getDescription().toLowerCase() : null, getVaccineType());
 	}
 
 	public String print() {

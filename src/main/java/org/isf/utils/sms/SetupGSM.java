@@ -25,6 +25,7 @@ import java.awt.HeadlessException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Properties;
 
 import javax.swing.JFrame;
@@ -73,7 +74,7 @@ public class SetupGSM extends JFrame implements SerialPortDataListener {
 		String model = props.getProperty(GSMGatewayService.SERVICE_NAME + ".gmm");
 
 		SerialPort[] portList = SerialPort.getCommPorts();
-		LOGGER.info("Found {} ports: {}", portList.length, portList.toString());
+		LOGGER.info("Found {} ports: {}", portList.length, Arrays.toString(portList));
 
 		for (SerialPort comPort : portList) {
 
@@ -88,18 +89,20 @@ public class SetupGSM extends JFrame implements SerialPortDataListener {
 				OutputStream outputStream = comPort.getOutputStream();
 				if (outputStream != null) {
 					LOGGER.info("Output stream OK");
+					inputStream = comPort.getInputStream();
+					byte[] command = model.getBytes();
+					outputStream.write(command);
 				} else {
 					LOGGER.info("Output stream not found");
 				}
-
-				inputStream = comPort.getInputStream();
-				byte[] command = model.getBytes();
-				outputStream.write(command);
 
 				Thread.sleep(5000);
 
 			} catch (PortInUseException e) {
 				LOGGER.error("Port in use.");
+			} catch (InterruptedException ie) {
+				Thread.currentThread().interrupt();
+				LOGGER.error("Interrupted while setting up port", ie);
 			} catch (RuntimeException re) {
 				LOGGER.error("Something strange happened.", re);
 			} catch (Exception exception) {

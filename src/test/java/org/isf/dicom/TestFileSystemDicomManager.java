@@ -143,22 +143,16 @@ class TestFileSystemDicomManager extends OHCoreTestCase {
 
 	@Test
 	void testDicomManagerFactoryGetMaxDicomSizeLongException() throws Exception {
-		assertThatThrownBy(() ->
-		{
-			DicomManagerFactory.getManager();
-			Class clazz = Class.forName("org.isf.dicom.manager.DicomManagerFactory");
-			Field props = clazz.getDeclaredField("props");
-			props.setAccessible(true);
-			Properties properties = new Properties();
-			properties.setProperty("dicom.max.size", "aString");
-			props.set(clazz, properties);
-			DicomManagerFactory.getMaxDicomSizeLong();
-		})
-				.isInstanceOf(OHDicomException.class);
+		DicomManagerFactory.getManager();
 		Class clazz = Class.forName("org.isf.dicom.manager.DicomManagerFactory");
-		// reset/clear properties
 		Field props = clazz.getDeclaredField("props");
 		props.setAccessible(true);
+		Properties properties = new Properties();
+		properties.setProperty("dicom.max.size", "aString");
+		props.set(clazz, properties);
+		assertThatThrownBy(DicomManagerFactory::getMaxDicomSizeLong)
+				.isInstanceOf(OHDicomException.class);
+		// reset/clear properties
 		props.set(clazz, new Properties());
 	}
 

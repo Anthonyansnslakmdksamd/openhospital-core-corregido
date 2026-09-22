@@ -45,7 +45,7 @@ public class MedicalWardForPrint implements Comparable<MedicalWardForPrint> {
 		this.code = medical.getProdCode();
 		this.packets = 0;
 		int pcsPerPck = medical.getPcsperpck();
-		if (pcsPerPck > 1) { 
+		if (pcsPerPck > 1 && qty != null) { 
 			this.packets = (int) (qty / pcsPerPck);
 		}
 	}

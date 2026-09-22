@@ -172,7 +172,7 @@ public class PrintReceipt {
 			job.print(doc, pras);
 
 		} catch (IOException | PrintException e) {
-			e.printStackTrace();
+			LOGGER.error("Printing receipt error", e);
 		}
 	}
 

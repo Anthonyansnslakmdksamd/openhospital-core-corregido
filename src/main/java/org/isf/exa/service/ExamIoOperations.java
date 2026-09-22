@@ -98,7 +98,7 @@ public class ExamIoOperations {
 	 * @return the newly persisted {@link Exam}.
 	 * @throws OHServiceException
 	 */
-	@Transactional
+	@Transactional(rollbackFor = OHServiceException.class)
 	public Exam create(Exam payload, List<String> rows) throws OHServiceException {
 		Exam exam = repository.save(payload);
 		if (exam.getProcedure() == 3) {
@@ -117,7 +117,7 @@ public class ExamIoOperations {
 	 * @return the newly persisted {@link Exam}.
 	 * @throws OHServiceException
 	 */
-	@Transactional
+	@Transactional(rollbackFor = OHServiceException.class)
 	public Exam update(Exam payload, List<String> rows) throws OHServiceException {
 		Exam oldExam = findByCode(payload.getCode());
 		Exam exam = repository.save(payload);

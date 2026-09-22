@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import org.isf.generaldata.GeneralData;
@@ -262,12 +262,11 @@ public class MedicalStockIoOperations {
 	 * @throws OHServiceException if an error occurs during the code generation.
 	 */
 	protected String generateLotCode() throws OHServiceException {
-		Random random = new Random();
 		long candidateCode;
 		Lot lot;
 
 		do {
-			candidateCode = Math.abs(random.nextLong());
+			candidateCode = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
 			lot = lotRepository.findById(String.valueOf(candidateCode)).orElse(null);
 		} while (lot != null);
 

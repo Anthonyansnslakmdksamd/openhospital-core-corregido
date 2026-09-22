@@ -22,6 +22,7 @@
 package org.isf.patient.manager;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -405,7 +406,7 @@ public class PatientBrowserManager {
 	}
 
 	private boolean checkAge(Patient patient) {
-		LocalDate now = LocalDate.now();
+		LocalDate now = LocalDate.now(ZoneId.systemDefault());
 		LocalDate birthDate = patient.getBirthDate();
 		if (patient.getAge() < 0 || patient.getAge() > 200) {
 			return false;

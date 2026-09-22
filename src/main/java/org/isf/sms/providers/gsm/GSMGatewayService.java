@@ -176,7 +176,11 @@ public class GSMGatewayService implements SmsSenderInterface, SerialPortDataList
 					return false;
 				}
 
-			} catch (IOException | InterruptedException exception) {
+			} catch (InterruptedException exception) {
+				Thread.currentThread().interrupt();
+				LOGGER.error(exception.getMessage(), exception);
+				return false;
+			} catch (IOException exception) {
 				LOGGER.error(exception.getMessage(), exception);
 				return false;
 			}
@@ -193,8 +197,10 @@ public class GSMGatewayService implements SmsSenderInterface, SerialPortDataList
 		byte[] buffer = new byte[1];
 		try {
 			while (inputStream.available() > 0) {
-				inputStream.read(buffer);
-				sb.append(new String(buffer));
+				int bytesRead = inputStream.read(buffer);
+				if (bytesRead > 0) {
+					sb.append(new String(buffer, 0, bytesRead));
+				}
 			}
 			String answer = sb.toString();
 			LOGGER.debug(answer);

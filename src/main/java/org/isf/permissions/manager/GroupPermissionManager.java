@@ -77,7 +77,7 @@ public class GroupPermissionManager {
 		return operations.create(groupPermission);
 	}
 
-	@Transactional
+	@Transactional(rollbackFor = OHDataValidationException.class)
 	public List<Permission> update(UserGroup userGroup, List<Integer> permissionIds, Boolean replace) throws OHDataValidationException {
 
 		List<Permission> permissions = permissionOperations.findByIdIn(permissionIds).stream().toList();

@@ -26,12 +26,11 @@ import java.util.regex.Pattern;
 
 public class EmailValidator {
 
-	// Java email validation permitted by RFC 5322
-	// Found this expression and discussion near the end of https://www.regular-expressions.info/email.html
+	@SuppressWarnings("java:S5998") // Possessive quantifiers prevent stack overflow while preserving RFC 5322 compliance
 	private static final String EMAIL_REGEX = "\\A(?=[A-Z0-9@.!#$%&'*+/=?^_‘{|}~-]{6,254}\\z)"
 			+ "(?=[A-Z0-9.!#$%&'*+/=?^_‘{|}~-]{1,64}@)"
-			+ "[A-Z0-9!#$%&'*+/=?^_‘{|}~-]+(?:\\.[A-Z0-9!#$%&'*+/=?^_‘{|}~-]+)*"
-			+ "@(?:(?=[A-Z0-9-]{1,63}\\.)[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\\.)+"
+			+ "[A-Z0-9!#$%&'*+/=?^_‘{|}~-]+(?:\\.[A-Z0-9!#$%&'*+/=?^_‘{|}~-]+)*+"
+			+ "@(?:(?=[A-Z0-9-]{1,63}\\.)[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\\.)++"
 			+ "(?=[A-Z0-9-]{1,63}\\z)[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\\z";
 	private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
 

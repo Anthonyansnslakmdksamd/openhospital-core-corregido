@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
@@ -104,7 +105,7 @@ public class TimeTools {
 			from = from.withHour(0).withMinute(0).withSecond(0);
 			to = to.withHour(0).withMinute(0).withSecond(0);
 		}
-		return (int) ChronoUnit.DAYS.between(from, to);
+		return (int) ChronoUnit.DAYS.between(from.atZone(ZoneId.systemDefault()), to.atZone(ZoneId.systemDefault()));
 	}
 
 	/**
@@ -164,7 +165,7 @@ public class TimeTools {
 		String pattern = MessageBundle.getMessage("angal.agepattern.txt");
 		String age = "";
 		if (birthDate != null) {
-			LocalDate now = LocalDate.now();
+			LocalDate now = LocalDate.now(ZoneId.systemDefault());
 			Period period = Period.between(birthDate, now);
 			age = MessageFormat.format(pattern, period.getYears(), period.getMonths(), period.getDays());
 		}
@@ -223,7 +224,7 @@ public class TimeTools {
 	 * @return LocalDateTime without nanoseconds
 	 */
 	public static LocalDateTime getNow() {
-		return LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+		return LocalDateTime.now(ZoneId.systemDefault()).truncatedTo(ChronoUnit.SECONDS);
 	}
 
 	/**
@@ -232,7 +233,7 @@ public class TimeTools {
 	 * @return
 	 */
 	public static LocalDateTime getDateToday0() {
-		return LocalDateTime.now().with(LocalTime.MIN).truncatedTo(ChronoUnit.SECONDS);
+		return LocalDateTime.now(ZoneId.systemDefault()).with(LocalTime.MIN).truncatedTo(ChronoUnit.SECONDS);
 	}
 
 	/**
@@ -241,7 +242,7 @@ public class TimeTools {
 	 * @return
 	 */
 	public static LocalDateTime getDateToday24() {
-		return LocalDateTime.now().with(LocalTime.MAX).truncatedTo(ChronoUnit.SECONDS);
+		return LocalDateTime.now(ZoneId.systemDefault()).with(LocalTime.MAX).truncatedTo(ChronoUnit.SECONDS);
 	}
 
 	/**
@@ -294,7 +295,7 @@ public class TimeTools {
 	 * @return the number of days
 	 */
 	public static int getDaysBetweenDates(LocalDateTime from, LocalDateTime to) {
-		return (int) ChronoUnit.DAYS.between(from, to);
+		return (int) ChronoUnit.DAYS.between(from.atZone(ZoneId.systemDefault()), to.atZone(ZoneId.systemDefault()));
 	}
 
 	/**

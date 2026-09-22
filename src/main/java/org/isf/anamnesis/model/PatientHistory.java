@@ -286,7 +286,7 @@ public class PatientHistory extends Auditable<String> implements Comparable<Pati
 
 	@Override
 	public int compareTo(PatientHistory obj) {
-		return this.id - obj.getId();
+		return Integer.compare(this.id, obj.getId());
 	}
 
 	public int getPatientId() {

@@ -41,7 +41,7 @@ public class LabPatientMergedEventListener {
 	}
 
 	@EventListener
-	@Transactional
+	@Transactional(rollbackFor = OHServiceException.class)
 	public void handle(PatientMergedEvent patientMergedEvent) throws OHServiceException {
 		List<Laboratory> laboratories = labIoOperations.getLaboratory(patientMergedEvent.obsoletePatient());
 		for (Laboratory laboratory : laboratories) {

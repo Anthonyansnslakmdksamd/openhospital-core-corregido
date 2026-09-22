@@ -338,7 +338,6 @@
 				<artifactId>license-maven-plugin</artifactId>
 				<version>${license.maven.plugin.version}</version>
 				<configuration>
-					<!-- <header>.license-header/license-header.txt</header> -->
 					<licenseSets>
 						<licenseSet>
 							<header>.license-header/license-header.txt</header>

@@ -22,6 +22,7 @@
 package org.isf.telemetry.daemon;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -45,8 +46,6 @@ public class TelemetryDaemon extends ConfigurationProperties implements Runnable
 	private Map<String, String> geoIpServicesUrlMap;
 	private String geoIpServiceSelected;
 
-	// Singleton instance
-	private static volatile TelemetryDaemon instance;
 	private Thread telemetryThread;
 
 	private TelemetryManager telemetryManager;
@@ -132,13 +131,14 @@ public class TelemetryDaemon extends ConfigurationProperties implements Runnable
 				Thread.sleep((long) customDelay * 1000);
 				updateSettingsCounter++;
 			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
 				LOGGER.debug(e.getMessage());
 			}
 		}
 	}
 
 	private boolean isTimeToSendMessage() {
-		boolean isTime = settings.getSentTimestamp() == null || !TimeTools.isSameDay(settings.getSentTimestamp(), LocalDateTime.now());
+		boolean isTime = settings.getSentTimestamp() == null || !TimeTools.isSameDay(settings.getSentTimestamp(), LocalDateTime.now(ZoneId.systemDefault()));
 		LOGGER.info("Telemetry module : already sent today");
 		return isTime;
 	}

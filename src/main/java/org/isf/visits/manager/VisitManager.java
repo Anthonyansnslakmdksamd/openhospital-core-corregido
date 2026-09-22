@@ -88,7 +88,7 @@ public class VisitManager {
 		if (patient == null) {
 			errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.visit.pleasechooseapatient.msg")));
 		}
-		if (errors.isEmpty()) {
+		if (errors.isEmpty() && patient != null && ward != null) {
 			String sex = String.valueOf(patient.getSex());
 			if ((sex.equalsIgnoreCase("F") && !ward.isFemale())
 				|| (sex.equalsIgnoreCase("M") && !ward.isMale())) {

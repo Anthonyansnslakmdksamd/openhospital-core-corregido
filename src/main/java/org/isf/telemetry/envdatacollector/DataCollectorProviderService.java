@@ -42,8 +42,11 @@ public class DataCollectorProviderService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataCollectorProviderService.class);
 
-	@Autowired
 	private List<AbstractDataCollector> dataCollectors;
+
+	public DataCollectorProviderService(List<AbstractDataCollector> dataCollectors) {
+		this.dataCollectors = dataCollectors;
+	}
 
 	/**
 	 * Finds single data collector and retrieves data

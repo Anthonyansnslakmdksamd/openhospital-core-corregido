@@ -36,7 +36,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.time.TimeTools;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(rollbackFor = OHServiceException.class)
 public class AdmissionIoOperationRepositoryImpl implements AdmissionIoOperationRepositoryCustom {
 
 	private static String nativeQueryTerms = "SELECT * from OH_PATIENT as p  "

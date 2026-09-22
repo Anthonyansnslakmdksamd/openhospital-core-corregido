@@ -47,6 +47,7 @@ public class DbQueryLogger {
      * @return ResultSet
      * @throws OHException
      */
+	@SuppressWarnings("java:S2095") // Statement cannot be closed here because caller consumes the returned ResultSet
 	public ResultSet getData(String aQuery, boolean autocommit) throws OHException {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Query {}", sanitize(aQuery));

@@ -22,6 +22,8 @@
 package org.isf.telemetry.envdatacollector.collectors;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +87,6 @@ public class OpenHospitalDataCollector extends AbstractDataCollector {
 
 	private AccountingIoOperations accountingIoOperations;
 
-	@Autowired
 	private List<GeoIpInfoCommonService> geoIpServices;
 
 	private GeoIpInfoSettings settings;
@@ -104,6 +105,28 @@ public class OpenHospitalDataCollector extends AbstractDataCollector {
 	                                 VisitsIoOperations visitsIoOperations,
 	                                 AccountingIoOperations accountingIoOperations,
 	                                 GeoIpInfoSettings geoIpInfoSettings) {
+		this(patientIoOperations, menuIoOperations, wardIoOperations, opdIoOperations,
+				admissionIoOperations, laboratoryIoOperations, vaccineIoOperations, operationRowIoOperations,
+				medicalStockIoOperations, medicalStockWardIoOperations, therapyIoOperations, visitsIoOperations,
+				accountingIoOperations, geoIpInfoSettings, Collections.emptyList());
+	}
+
+	@Autowired
+	public OpenHospitalDataCollector(PatientIoOperations patientIoOperations,
+	                                 MenuIoOperations menuIoOperations,
+	                                 WardIoOperations wardIoOperations,
+	                                 OpdIoOperations opdIoOperations,
+	                                 AdmissionIoOperations admissionIoOperations,
+	                                 LabIoOperations laboratoryIoOperations,
+	                                 VaccineIoOperations vaccineIoOperations,
+	                                 OperationRowIoOperations operationRowIoOperations,
+	                                 MedicalStockIoOperations medicalStockIoOperations,
+	                                 MedicalStockWardIoOperations medicalStockWardIoOperations,
+	                                 TherapyIoOperations therapyIoOperations,
+	                                 VisitsIoOperations visitsIoOperations,
+	                                 AccountingIoOperations accountingIoOperations,
+	                                 GeoIpInfoSettings geoIpInfoSettings,
+	                                 List<GeoIpInfoCommonService> geoIpServices) {
 		this.patientIoOperations = patientIoOperations;
 		this.menuIoOperations = menuIoOperations;
 		this.wardIoOperations = wardIoOperations;
@@ -118,6 +141,7 @@ public class OpenHospitalDataCollector extends AbstractDataCollector {
 		this.visitsIoOperations = visitsIoOperations;
 		this.accountingIoOperations = accountingIoOperations;
 		this.settings = geoIpInfoSettings;
+		this.geoIpServices = geoIpServices;
 	}
 
 	@Override
@@ -170,7 +194,7 @@ public class OpenHospitalDataCollector extends AbstractDataCollector {
 
 			LocalDateTime lastUsedTime = opdIoOperations.lastOpdCreationDate();
 			if (lastUsedTime == null) {
-				lastUsedTime = LocalDateTime.now();
+				lastUsedTime = LocalDateTime.now(ZoneId.systemDefault());
 			}
 			result.put(CollectorsConstants.TIME_LAST_USED, String.valueOf(lastUsedTime));
 		} catch (OHServiceException e) {

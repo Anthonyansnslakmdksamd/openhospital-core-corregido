@@ -22,6 +22,7 @@
 package org.isf.malnutrition.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -192,15 +193,6 @@ public class Malnutrition extends Auditable<String> {
 
 	@Override
 	public int hashCode() {
-	    if (this.hashCode == 0) {
-	        final int m = 23;
-	        int c = 133;
-	        
-	        c = m * c + code;
-	        
-	        this.hashCode = c;
-	    }
-	  
-	    return this.hashCode;
+		return Objects.hash(getDateConf(), getDateSupp(), getAdmission(), getHeight(), getWeight());
 	}
 }

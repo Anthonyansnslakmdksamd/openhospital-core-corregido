@@ -49,23 +49,24 @@ public class DelayTimer extends Thread {
 	public void startTimer() {
 		synchronized (mutex) {
 			waitTime = delay;
-			mutex.notify();
+			mutex.notifyAll();
 		}
 	}
 
 	public void stopTimer() {
 		try {
-			synchronized (mutex) {
-				synchronized (triggeredMutex) {
-					if (triggered) {
-						triggeredMutex.wait();
-					}
+			synchronized (triggeredMutex) {
+				while (triggered) {
+					triggeredMutex.wait();
 				}
+			}
+			synchronized (mutex) {
 				waitTime = 0;
-				mutex.notify();
+				mutex.notifyAll();
 			}
 		} catch (InterruptedException interruptedException) {
 			LOGGER.error("trigger failure", interruptedException);
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -93,19 +94,20 @@ public class DelayTimer extends Thread {
 				} finally {
 					synchronized (triggeredMutex) {
 						triggered = false;
-						triggeredMutex.notify();
+						triggeredMutex.notifyAll();
 					}
 				}
 			}
 		} catch (InterruptedException interruptedException) {
 			LOGGER.error("interrupted in run", interruptedException);
+			Thread.currentThread().interrupt();
 		}
 	}
 
 	public void quit() {
 		synchronized (mutex) {
 			this.quit = true;
-			mutex.notify();
+			mutex.notifyAll();
 		}
 	}
 

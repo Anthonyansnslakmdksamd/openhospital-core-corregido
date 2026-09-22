@@ -275,7 +275,7 @@ class Tests extends OHCoreTestCase {
 		assertThat(visit).isNotNull();
 
 		Visit foundVisit = visitsIoOperation.getVisit(visit.getVisitID());
-		assertThat(foundVisit).isEqualTo(foundVisit);
+		assertThat(foundVisit).isEqualTo(visit);
 
 		assertThat(visitsIoOperation.getVisit(-99)).isNull();
 	}

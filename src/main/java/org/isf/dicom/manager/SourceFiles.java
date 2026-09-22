@@ -31,7 +31,7 @@ import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Iterator;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
@@ -122,7 +122,9 @@ public class SourceFiles extends Thread {
 
 			try {
 				Thread.sleep(10);
-			} catch (Exception e) {}
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
 
 			if (!value.isDirectory()) {
 				try {
@@ -191,14 +193,13 @@ public class SourceFiles extends Thread {
 			if (isJpeg) {
 				studyDate = FileTools.getTimestamp(sourceFile); //get last modified date (creation date)
 			} else if (isDicom) {
-				DicomInputStream dicomInputStream;
-				try {
-					dicomInputStream = new DicomInputStream(sourceFile);
+				Attributes attributes;
+				try (DicomInputStream dicomInputStream = new DicomInputStream(sourceFile)) {
+					attributes = dicomInputStream.readDataset();
 				} catch (DicomStreamException dicomStreamException) {
 					throw new OHDicomException(new OHExceptionMessage(
 							MessageBundle.formatMessage("angal.dicom.thefileisinanunknownformat.fmt.msg", fileName)));
 				}
-				Attributes attributes = dicomInputStream.readDataset();
 				seriesDate = getSeriesDateTime(attributes);
 				studyDate = getStudyDateTime(attributes);
 				if (attributes.contains(Tag.SeriesNumber)) {
@@ -286,7 +287,8 @@ public class SourceFiles extends Thread {
 					if (orientation != 1) {
 						originalImage = autoRotate(originalImage, orientation);
 						String fileType = StringUtils.endsWithIgnoreCase(sourceFile.getName(), ".jpg") ? "jpg" : "jpeg";
-						File f = File.createTempFile(sourceFile.getName(), '.' + fileType);
+						File parentDir = sourceFile.getParentFile() != null ? sourceFile.getParentFile() : new File(System.getProperty("user.home"));
+						File f = File.createTempFile(sourceFile.getName(), '.' + fileType, parentDir);
 						ImageIO.write(originalImage, fileType, f);
 						sourceFile = f;
 					}
@@ -542,11 +544,10 @@ public class SourceFiles extends Thread {
 	 * @throws OHServiceException if an error occurs during the code generation.
 	 */
 	public static String generateSeriesNumber(int patient) throws OHServiceException {
-		Random random = new Random();
 		long candidateCode;
 		boolean exists;
 		do {
-			candidateCode = Math.abs(random.nextLong());
+			candidateCode = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
 			exists = DicomManagerFactory.getManager().exist(patient, String.valueOf(candidateCode));
 
 		} while (exists);

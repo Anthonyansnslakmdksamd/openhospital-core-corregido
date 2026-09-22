@@ -388,7 +388,7 @@ public class MovStockInsertingManager {
 	 * @return the list of {@link Lot}s updated.
 	 * @throws OHServiceException if an error occurs during the check.
 	 */
-	@Transactional
+	@Transactional(rollbackFor = OHServiceException.class)
 	public List<Lot> updateLot(List<Lot> lots) throws OHServiceException {
 		List<Lot> updatedLots = new ArrayList<>();
 		for (Lot lot : lots) {

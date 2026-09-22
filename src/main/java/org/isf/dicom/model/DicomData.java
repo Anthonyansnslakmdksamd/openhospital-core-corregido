@@ -104,8 +104,7 @@ public class DicomData extends Auditable<String> implements Serializable {
 	 */
 	public void setData(File dicomFile) {
 		try (FileInputStream fis = new FileInputStream(dicomFile)) {
-			byte[] byteArray = new byte[fis.available()];
-			fis.read(byteArray);
+			byte[] byteArray = fis.readAllBytes();
 			this.data = new SerialBlob(byteArray);
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);

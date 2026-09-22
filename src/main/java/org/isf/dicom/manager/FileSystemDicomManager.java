@@ -55,6 +55,7 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -70,6 +71,7 @@ public class FileSystemDicomManager implements DicomManagerInterface {
 	private static String DICOM_DATE_FORMAT_ZONED = "EEE MMM dd HH:mm:ss z yyyy";
 	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DICOM_DATE_FORMAT_ZONED, new Locale("en"));
 
+	@Autowired
 	public FileSystemDicomManager() {
 	}
 
@@ -405,8 +407,7 @@ public class FileSystemDicomManager implements DicomManagerInterface {
 		File fdc = new File(sd, idFile + ".thumn");
 		byte[] byteArray;
 		try (FileInputStream fis = new FileInputStream(fdc)) {
-			byteArray = new byte[fis.available()];
-			fis.read(byteArray);
+			byteArray = fis.readAllBytes();
 		}
 		return new SerialBlob(byteArray);
 	}
@@ -421,8 +422,7 @@ public class FileSystemDicomManager implements DicomManagerInterface {
 		File fdc = new File(sd, idFile + ".data");
 		byte[] byteArray;
 		try (FileInputStream fis = new FileInputStream(fdc)) {
-			byteArray = new byte[fis.available()];
-			fis.read(byteArray);
+			byteArray = fis.readAllBytes();
 		}
 		return new SerialBlob(byteArray);
 	}
@@ -500,7 +500,9 @@ public class FileSystemDicomManager implements DicomManagerInterface {
 				}
 			}
 
-			i.delete();
+			if (!i.delete() && i.exists()) {
+				LOGGER.warn("Could not delete file {}", i);
+			}
 
 			i = new File(dir, "dicom.storage");
 
@@ -661,12 +663,12 @@ public class FileSystemDicomManager implements DicomManagerInterface {
 
 	@Override
 	public boolean exist(int patientId, String seriesNumber) throws OHServiceException {
-		File seriesFolder = null;
 		try {
-			seriesFolder = getSerieDir(patientId, seriesNumber, false);
+			File seriesFolder = getSerieDir(patientId, seriesNumber, false);
+			return seriesFolder != null && seriesFolder.exists();
 		} catch (IOException e) {
+			return false;
 		}
-		return seriesFolder.exists();
 	}
 
 }

@@ -21,6 +21,8 @@
  */
 package org.isf.menu.model;
 
+import java.util.Objects;
+
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -106,6 +108,11 @@ public class GroupMenu extends Auditable<String> {
 						&& getUserGroup().equalsIgnoreCase(((GroupMenu) anObject).getUserGroup())
 						&& getMenuItem().equals(((GroupMenu) anObject).getMenuItem())
 						&& getActive() == ((GroupMenu) anObject).getActive());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getCode(), getUserGroup() != null ? getUserGroup().toLowerCase() : null, getMenuItem(), getActive());
 	}
 
 }

@@ -271,7 +271,7 @@ public class Bill extends Auditable<String> implements Cloneable, Comparable<Bil
 
 	@Override
 	public int compareTo(Bill obj) {
-		return this.id - obj.getId();
+		return Integer.compare(this.id, obj.getId());
 	}
 
 	@Override

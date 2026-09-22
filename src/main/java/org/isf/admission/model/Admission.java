@@ -525,7 +525,7 @@ public class Admission extends SoftDeletableAuditable<String> implements Compara
 
 	@Override
 	public int compareTo(Admission anAdmission) {
-		return this.id - anAdmission.getId();
+		return Integer.compare(this.id, anAdmission.getId());
 	}
 
 	@Override

@@ -23,6 +23,7 @@ package org.isf.medicalinventory.manager;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -109,7 +110,7 @@ public class MedicalInventoryManager {
 	 * @return the newly persisted {@link MedicalInventory} object.
 	 * @throws OHServiceException
 	 */
-	@Transactional
+	@Transactional(rollbackFor = OHServiceException.class)
 	public MedicalInventory newMedicalInventory(MedicalInventory medicalInventory, List<MedicalInventoryRow> newMedicalInventoryRows)
 		throws OHServiceException {
 		validateMedicalInventory(medicalInventory, true);
@@ -246,7 +247,7 @@ public class MedicalInventoryManager {
 	 */
 	private void validateMedicalInventory(MedicalInventory medicalInventory, boolean checkReferenceExists) throws OHDataValidationException {
 		List<OHExceptionMessage> errors = new ArrayList<>();
-		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		LocalDateTime tomorrow = LocalDateTime.now(ZoneId.systemDefault()).plusDays(1);
 		String reference = medicalInventory.getInventoryReference();
 		if (medicalInventory.getInventoryDate() == null) {
 			errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.inventory.pleaseinsertavalidinventorydate.msg")));

@@ -40,7 +40,7 @@ public class ExaminationPatientMergedEventListener {
 	}
 
 	@EventListener
-	@Transactional
+	@Transactional(rollbackFor = OHServiceException.class)
 	public void handle(PatientMergedEvent patientMergedEvent) throws OHServiceException {
 		List<PatientExamination> patientExaminations = examinationOperations.getByPatID(patientMergedEvent.obsoletePatient().getCode());
 		for (PatientExamination examination : patientExaminations) {
